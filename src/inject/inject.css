@@ -1,31 +1,62 @@
-/**
- * Place your custom CSS styles here.
- **/
 
-.custom-input{
+.al-intro-btn {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: teal;
+    z-index: 10000;
+    color: #FFFFFF;
+    text-align: center;
+}
+.al-custom-input{
     width: 100%;
     margin-bottom: 10px;
 }
 
+.al-button-layer{
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
-.custom-btn{
+.al-custom-btn{
     background: #ccc;
-    padding: 6px 10px;
+    padding: 3px 6px;
     text-decoration: none;
     border-radius: 2px;
 }
 
-.custom-btn-cont{
-    text-align: right;
+.al-custom-tooltip-remove{
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: #FFFFFF;
+    z-index: 500;
+    border: 1px solid #cccccc;
+    border-radius: 50%;
+    right: -8px;
+    top: -8px;
+    cursor: pointer;
 }
 
-.box {
+.al-custom-tooltip-remove:after{
+    content: 'x';
+    z-index: 501;
+    position: absolute;
+    line-height: 18px;
+    right: 7px;
+}
+
+.al-box {
     height: 40px;
     width: 40px;
     /*background: lightgray;*/
     position: relative;
 }
-.wrap {
+.al-wrap {
     position: absolute;
     top: 0;
     left: 25%;
@@ -33,7 +64,7 @@
     width: 50%;
     overflow: hidden;
 }
-.touch {
+.al-touch {
     position: absolute;
     top: 0;
     left: 50%;
@@ -44,32 +75,32 @@
     background: gray;
     cursor: pointer;
 }
-.wrap:nth-child(2) {
+.al-wrap:nth-child(2) {
     transform: rotate(90deg);
     transform-origin: top left;
     top: 25%;
     left: 100%;
 }
-.wrap:nth-child(3) {
+.al-wrap:nth-child(3) {
     transform: rotate(180deg);
     transform-origin: top left;
     top: 100%;
     left: 75%;
 }
-.wrap:nth-child(4) {
+.al-wrap:nth-child(4) {
     transform: rotate(-90deg);
     transform-origin: top left;
     top: 75%;
     left: 0;
 }
-.touch:hover {
+.al-touch:hover {
     background: tomato;
 }
 
-.touch.arrow-selected{
+.al-touch.al-arrow-selected{
     background: green;
 }
 
-.outline-css{
+.al-outline-css{
     border: 1px solid blue !important;
 }

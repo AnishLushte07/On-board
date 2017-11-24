@@ -11,3 +11,14 @@ chrome.extension.onMessage.addListener(
   	chrome.pageAction.show(sender.tab.id);
     sendResponse();
   });
+
+
+chrome.browserAction.onClicked.addListener(function (tab) {
+
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+
+        console.log(tabs);
+        // chrome.tabs.sendMessage(tabs[0].id,"toggle");
+    })
+
+});
