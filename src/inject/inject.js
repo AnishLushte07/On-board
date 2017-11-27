@@ -1,11 +1,19 @@
 
 
 // add sidepanel on right side of page
+var iframeOpen = false;
 
-
-
-
-
+document.addEventListener('DOMContentLoaded', function(){
+    document.getElementById('togglePanel').addEventListener('click', function(){
+        var msg = iframeOpen ? 'closeFrame' : 'openFrame';
+        chrome.tabs.query({ active: true, currentWindow: true}, function(tabs){
+            chrome.tabs.sendMessage(tabs[0].id, {message: msg}, function(res){
+                console.log('callback ', res);
+                iframeOpen = !iframeOpen;
+            });
+        });
+    });
+});
 
 //intro steps logic.
 
