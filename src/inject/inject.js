@@ -1,9 +1,46 @@
 
 
 // add sidepanel on right side of page
+chrome.runtime.onMessage.addListener(function(msg, sender){
+    if(msg == "addPanel"){
+        _addPanel();
+    }
+});
 
 
+function _addPanel() {
+    //height of top bar, or width in your case
+    var width = '30px';
 
+    //resolve html tag, which is more dominant than <body>
+    var html;
+    if (document.documentElement) {
+        html = document.documentElement; //just drop $ wrapper if no jQuery
+    } else if (document.getElementsByTagName('html') && document.getElementsByTagName('html')[0]) {
+        html = document.getElementsByTagName('html')[0];
+    } else {
+        alert('no html tag retrieved...!');
+        throw 'no html tag retrieved son.';
+    }
+
+    //position
+    if (html.css('position') === 'static') { //or //or getComputedStyle(html).position
+        html.css('position', 'relative');//or use .style or setAttribute
+    }
+
+    //top (or right, left, or bottom) offset
+    var currentRight = html.css('right');//or getComputedStyle(html).top
+    if (currentRight === 'auto') {
+        currentRight = 0;
+    } else {
+        currentRight = parseFloat(html.css('right')); //parseFloat removes any 'px' and returns a number type
+    }
+
+    html.css(
+        'right',     //make sure we're -adding- to any existing values
+        currentRight + parseFloat(width) + 'px'
+    );
+}
 
 
 

@@ -13,12 +13,16 @@ chrome.extension.onMessage.addListener(
   });
 
 
+
 chrome.browserAction.onClicked.addListener(function (tab) {
 
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 
-        console.log(tabs);
-        // chrome.tabs.sendMessage(tabs[0].id,"toggle");
-    })
+        chrome.tabs.executeScript(tabs[0].id, {file: "../inject/intro.js"});
+        chrome.tabs.executeScript(tabs[0].id, {file: "../inject/inject.js"});
+        /*chrome.tabs.insertCSS(tabs[0].id, { file: "On-board/src/inject/inject.css" });
+        chrome.tabs.insertCSS(tabs[0].id, { file: "On-board/src/inject/intro.css" });*/
+
+    });
 
 });
