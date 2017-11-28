@@ -1,4 +1,4 @@
-
+/*
 function putOnBoardingElement() {
     chrome.tabs.executeScript(null, { file: "src/inject/inject.js" });
     chrome.tabs.executeScript(null, { file: "src/inject/intro.js" });
@@ -7,9 +7,7 @@ function putOnBoardingElement() {
     window.close();
 }
 
-
-
 // load content script on click;
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('startOnboard').addEventListener('click', putOnBoardingElement);
-});
+});*/
