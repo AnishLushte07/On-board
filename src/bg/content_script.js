@@ -14,7 +14,7 @@ var html;
 //position
 if (getComputedStyle(html).position === 'static') { //or //or getComputedStyle(html).position
   // html.style.position = 'relative';
-  html.setAttribute('style' , 'position: relative;width: calc(100%)');
+  html.setAttribute('style' , 'position: relative;width: calc(100% - 30px)');
 }
 
 var currentRight = getComputedStyle(html).right;
@@ -58,6 +58,11 @@ chrome.runtime.onMessage.addListener(
       iframe.style.width = '300px';
     }else if(request.message === 'closeFrame'){
       iframe.style.width = '30px';
+    }else if(request.message === 'addNewStep'){
+        _addNewStep();
+    }else if(request.message === 'runIntro'){
+        _runIntro();
     }
+    sendResponse();
   }
-)
+);
