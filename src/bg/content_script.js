@@ -42,11 +42,10 @@ iframe.style.position = "fixed";
 iframe.style.top = "0px";
 iframe.style.right = "0px";
 iframe.style.zIndex = "54658251513";
-iframe.style.transition = 'width 0.3s ease-in-out';
+iframe.style.transition = 'width 0.2s ease-in-out';
 iframe.frameBorder = "none"; 
 iframe.id = 'alSidePanel'
-iframe.src = chrome.extension.getURL("src/browser_action/browser_action.html")
-// document.body.appendChild(iframe);
+iframe.src = chrome.extension.getURL("src/browser_action/browser_action.html");
 
 html.append(iframe);
 
@@ -54,6 +53,7 @@ html.append(iframe);
 /*Listent for post message event from iframe*/
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse){
+      console.log('contnet_script runttime listener');
     if(request.message === 'openFrame'){
       iframe.style.width = '300px';
     }else if(request.message === 'closeFrame'){
@@ -66,3 +66,15 @@ chrome.runtime.onMessage.addListener(
     sendResponse();
   }
 );
+
+
+
+
+function openSidePanel() {
+    chrome.runtime.sendMessage({
+        message: "addOpenClass",
+        steps: introSteps
+    });
+    // toggleIframe();
+    iframe.style.width = '300px';
+}

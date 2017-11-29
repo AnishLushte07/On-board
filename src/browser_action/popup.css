@@ -1,0 +1,70 @@
+
+body{
+    overflow-x: hidden;
+}
+
+.al-button {
+    padding: 8px 10px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: 2px solid #008CBA;
+}
+
+.al-button:hover {
+    background-color: #008CBA;
+    color: white;
+}
+
+
+.main-popup{
+    display: flex;
+    height: 100%;
+}
+
+.main-popup .intro-form-container{
+    display: none;
+}
+
+.main-popup.open #openPanel{
+    display: none;
+}
+
+.main-popup.open .intro-form-container{
+    display: block;
+}
+
+.intro-form-container{
+    /*padding: 10px;*/
+    flex: 1 0 0;
+}
+
+.abcd {
+    display: flex;
+    flex-direction: column;
+    height:100%;
+}
+
+.abcd .heading{
+    padding: 20px;
+    background-color: teal;
+    text-align: center;
+    font-size: 24px;
+    color: #FFF;
+}
+
+.abcd .content{
+    padding: 10px;
+    font-size: 16px;
+    flex: 1 0 0;
+}
+
+.abcd .footer{
+    padding: 10px;
+}

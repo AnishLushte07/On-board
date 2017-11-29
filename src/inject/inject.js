@@ -107,6 +107,7 @@ function _saveStep() {
     });
 
     _removeTooltip();
+    openSidePanel();
 }
 
 
