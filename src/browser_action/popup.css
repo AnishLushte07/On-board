@@ -26,6 +26,7 @@ body{
 .main-popup{
     display: flex;
     height: 100%;
+    width: 100%;
 }
 
 .main-popup .intro-form-container{
@@ -43,6 +44,7 @@ body{
 .intro-form-container{
     /*padding: 10px;*/
     flex: 1 0 0;
+    width: inherit;
 }
 
 .abcd {
@@ -67,4 +69,13 @@ body{
 
 .abcd .footer{
     padding: 10px;
+}
+
+.step-view{
+    background-color: #FFFFFF;
+}
+
+.step-view p {
+    padding: 5px;
+    margin: 0;
 }
