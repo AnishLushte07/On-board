@@ -1,7 +1,7 @@
 
 
 angular.module('alOnBoarding')
-    .controller('AppController', function ($log) {
+    .controller('AppController', ['$log','$scope', function ($log, $scope) {
         //console.log('AppController')
         //console.log(angular.toJson($state.get()));
         //loading main page content scripts here ?????????????
@@ -9,29 +9,29 @@ angular.module('alOnBoarding')
 
         var vm = this;
         vm.steps = [];
+        vm.removeStep = removeStep;
 
         chrome.runtime.onMessage.addListener(
             function(request, sender, sendResponse){
-                console.log('popupjs runttime listener ', request);
                 if(request.message === 'addOpenClass'){
-                    toggleOpenClass();
                     updateStepJson(request.steps);
+                    toggleOpenClass();
                 }
             }
         );
 
-
+        function removeStep(stepIndex) {
+            chrome.tabs.query({ active: true, currentWindow: true}, function(tabs){
+                chrome.tabs.sendMessage(tabs[0].id, {message: 'removeStep', stepIndex : stepIndex}, function(res){
+                    vm.steps.splice(stepIndex, 1);
+                    $scope.$apply();
+                });
+            });
+        }
 
         function updateStepJson(steps) {
             vm.steps = angular.copy(steps);
-            /*var latestStep = steps[steps.length - 1];
-            var stepHtml =  '<p>'+ latestStep.intro +'</p><p>'+ latestStep.position+'</p>';
-            var child = document.createElement('div');
-            child.className = 'step-view';
-            child.innerHTML = stepHtml;
-
-            // document.getElementsByClassName('content')[0].innerHTML = '<pre style="white-space: normal;">' + JSON.stringify(steps) + '</pre>';
-            document.getElementsByClassName('content')[0].appendChild(child);*/
+            $scope.$apply();
         }
 
         // add sidepanel on right side of page
@@ -63,12 +63,7 @@ angular.module('alOnBoarding')
             });
         });
 
-
-        //intro steps logic.
-
-
         // listen for add new step click event
-        console.log(document.getElementById('alNewStep'));
         document.getElementById('alNewStep').addEventListener('click', function () {
             chrome.tabs.query({ active: true, currentWindow: true}, function(tabs){
                 chrome.tabs.sendMessage(tabs[0].id, {message: 'addNewStep'}, function(res){
@@ -76,7 +71,6 @@ angular.module('alOnBoarding')
                 });
             });
         });
-
 
         document.getElementById('alRunIntro').addEventListener('click', function () {
             chrome.tabs.query({ active: true, currentWindow: true}, function(tabs){
@@ -88,4 +82,4 @@ angular.module('alOnBoarding')
 
 
 
-    });
+    }]);

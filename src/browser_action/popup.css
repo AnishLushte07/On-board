@@ -73,9 +73,15 @@ body{
 
 .step-view{
     background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
 }
 
 .step-view p {
     padding: 5px;
     margin: 0;
+}
+
+.step-view .step-data{
+    flex: 1 0 0;
 }

@@ -17,9 +17,26 @@
                     <span>Intro js</span>
                 </div>
                 <div class="content">
-                    <div class="step-view" ng-repeat="step in app.steps">
-                        <p>{{step.intro}}</p>
-                        <p>{{step.position}}</p>
+                    <div ng-repeat="step in app.steps track by $index">
+                        <div class="step-view">
+                            <div class="step-data">
+                                <p>{{step.intro}}</p>
+                                <p>{{step.position}}</p>
+                            </div>
+                            <div class="step-remove">
+                                <button ng-click="app.removeStep($index)">X</button>
+                                <button ng-click="app.updateStep($index);">Update</button>
+                            </div>
+                        </div>
+                        <div class="step-update">
+                            <input type="text" ng-model="" value="{{step.intro}}">
+                            <select name="position" id="step-position">
+                                <option value="top">top</option>
+                                <option value="right">right</option>
+                                <option value="bottom">bottom</option>
+                                <option value="left">left</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="footer">

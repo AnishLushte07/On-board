@@ -11,6 +11,11 @@ function removeTooltip(){
     _removeTooltip();
 }
 
+
+function removeStep(stepIndex) {
+    introSteps.splice(stepIndex, 1);
+}
+
 //set a
 function _setPostion(e){
     if(e.target.nodeName === 'SPAN'){

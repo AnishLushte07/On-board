@@ -62,19 +62,18 @@ chrome.runtime.onMessage.addListener(
         _addNewStep();
     }else if(request.message === 'runIntro'){
         _runIntro();
+    }else if('removeStep' === request.message){
+        removeStep(request.stepIndex);
     }
     sendResponse();
   }
 );
-
-
-
 
 function openSidePanel() {
     chrome.runtime.sendMessage({
         message: "addOpenClass",
         steps: introSteps
     });
-    // toggleIframe();
+
     iframe.style.width = '300px';
 }
