@@ -64,6 +64,8 @@ chrome.runtime.onMessage.addListener(
         _runIntro();
     }else if('removeStep' === request.message){
         removeStep(request.stepIndex);
+    }else if('updateStep' === request.message){
+      updateStep(request.stepIndex, request.data);
     }
     sendResponse();
   }

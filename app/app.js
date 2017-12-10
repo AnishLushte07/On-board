@@ -1,6 +1,0 @@
-
-
-angular
-    .module('alOnBoarding', [
-
-    ]);

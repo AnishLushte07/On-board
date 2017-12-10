@@ -1,6 +1,4 @@
 
-
-
 var pastEle = null;
 var introSteps = [];
 var liveStep = {};
@@ -11,6 +9,10 @@ function removeTooltip(){
     _removeTooltip();
 }
 
+function updateStep(stepIndex, data){
+    introSteps[stepIndex].intro = data.intro;
+    introSteps[stepIndex].position = data.position;
+}
 
 function removeStep(stepIndex) {
     introSteps.splice(stepIndex, 1);

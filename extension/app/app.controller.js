@@ -1,15 +1,21 @@
 
 
 angular.module('alOnBoarding')
-    .controller('AppController', ['$log','$scope', function ($log, $scope) {
+    .controller('AppController', ['$log','$scope','$http', 'apiUrl',
+        function ($log, $scope, $http, apiUrl) {
         //console.log('AppController')
         //console.log(angular.toJson($state.get()));
         //loading main page content scripts here ?????????????
         $log.log('App controller initialized');
 
         var vm = this;
+        vm.editStepCopy;
         vm.steps = [];
         vm.removeStep = removeStep;
+        vm.editStep = editStep;
+        vm.saveStep = saveStep;
+        vm.cancel = cancel;
+        vm.saveIntro = saveIntro;
 
         chrome.runtime.onMessage.addListener(
             function(request, sender, sendResponse){
@@ -20,6 +26,30 @@ angular.module('alOnBoarding')
             }
         );
 
+        function saveIntro(){
+            console.log(vm.steps);
+            $http.post(apiUrl+'/steps', vm.steps, {})
+                .then(function(res){
+                    console.log(res);
+                }, function(err){
+                    console.log(err);
+                });
+        }
+
+        function cancel(stepIndex){
+            vm.steps[stepIndex] = vm.editStepCopy;
+            vm.steps[stepIndex].updateStep = false;
+        }
+
+        function saveStep(stepIndex){
+            vm.steps[stepIndex].updateStep = false;
+            chrome.tabs.query({ active: true, currentWindow: true}, function(tabs){
+                chrome.tabs.sendMessage(tabs[0].id, {message: 'updateStep', stepIndex : stepIndex, data: vm.steps[stepIndex]}, function(res){
+                    $scope.$apply();
+                });
+            });
+        }
+
         function removeStep(stepIndex) {
             chrome.tabs.query({ active: true, currentWindow: true}, function(tabs){
                 chrome.tabs.sendMessage(tabs[0].id, {message: 'removeStep', stepIndex : stepIndex}, function(res){
@@ -27,6 +57,11 @@ angular.module('alOnBoarding')
                     $scope.$apply();
                 });
             });
+        }
+
+        function editStep(stepIndex){
+            vm.editStepCopy = vm.steps[stepIndex];
+            vm.steps[stepIndex].updateStep = !vm.steps[stepIndex].updateStep;
         }
 
         function updateStepJson(steps) {
