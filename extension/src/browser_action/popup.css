@@ -4,7 +4,7 @@ body{
 }
 
 .al-button {
-    padding: 8px 10px;
+    padding: 4px 6px;
     text-align: center;
     text-decoration: none;
     font-size: 16px;
@@ -53,7 +53,7 @@ body{
     height:100%;
 }
 
-.abcd .heading{
+.abcd header{
     padding: 20px;
     background-color: teal;
     text-align: center;
@@ -61,20 +61,23 @@ body{
     color: #FFF;
 }
 
-.abcd .content{
+.abcd main{
     padding: 10px;
     font-size: 16px;
     flex: 1 0 0;
 }
 
-.abcd .footer{
+.abcd footer{
     padding: 10px;
+    display: flex;
+    justify-content: space-around;
 }
 
 .step-view{
     background-color: #FFFFFF;
+    margin-top: 5px;
     display: flex;
-    align-items: center;
+    /*align-items: center;*/
 }
 
 .step-view p {
@@ -84,4 +87,18 @@ body{
 
 .step-view .step-data{
     flex: 1 0 0;
+}
+
+.step-remove{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.icon-button{
+        background: transparent;
+    border: none;
+    outline: none;
+    color: #ccc;
+    cursor: pointer;
 }

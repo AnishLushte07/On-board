@@ -37,6 +37,7 @@ angular.module('alOnBoarding')
         }
 
         function cancel(stepIndex){
+            console.log(vm.editStepCopy);
             vm.steps[stepIndex] = vm.editStepCopy;
             vm.steps[stepIndex].updateStep = false;
         }
@@ -60,7 +61,7 @@ angular.module('alOnBoarding')
         }
 
         function editStep(stepIndex){
-            vm.editStepCopy = vm.steps[stepIndex];
+            vm.editStepCopy = angular.copy(vm.steps[stepIndex]);
             vm.steps[stepIndex].updateStep = !vm.steps[stepIndex].updateStep;
         }
 

@@ -5,9 +5,6 @@
 </head>
 <body>
 
-
-
-
 <div style="top: 0;left: 0;bottom: 0; right: 0;position: absolute;">
     <div class="main-popup">
         <div style="width: 30px;" id="openPanel">
@@ -15,11 +12,11 @@
         </div>
         <div class="intro-form-container">
             <div class="abcd">
-                <div class="heading">
+                <header>
                     <button id="closePanel" style="float: left;margin-top: 8px;">&#x2192;</button>
                     <span>Intro js</span>
-                </div>
-                <div class="content">
+                </header>
+                <main>
                     <div ng-repeat="step in app.steps track by $index">
                         <div class="step-view" ng-if="!step.updateStep">
                             <div class="step-data">
@@ -27,8 +24,12 @@
                                 <p>{{step.position}}</p>
                             </div>
                             <div class="step-remove">
-                                <button ng-click="app.removeStep($index)">  &#x2421;</button>
-                                <button ng-click="app.editStep($index);">Edit</button>
+                                <button ng-click="app.removeStep($index)" class="icon-button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 48 48" height="18px" version="1.1" viewBox="0 0 48 48" width="18px" xml:space="preserve"><g id="Expanded"><g><g><path d="M41,48H7V7h34V48z M9,46h30V9H9V46z"/></g><g><path d="M35,9H13V1h22V9z M15,7h18V3H15V7z"/></g><g><path d="M16,41c-0.553,0-1-0.447-1-1V15c0-0.553,0.447-1,1-1s1,0.447,1,1v25C17,40.553,16.553,41,16,41z"/></g><g><path d="M24,41c-0.553,0-1-0.447-1-1V15c0-0.553,0.447-1,1-1s1,0.447,1,1v25C25,40.553,24.553,41,24,41z"/></g><g><path d="M32,41c-0.553,0-1-0.447-1-1V15c0-0.553,0.447-1,1-1s1,0.447,1,1v25C33,40.553,32.553,41,32,41z"/></g><g><rect height="2" width="48" y="7"/></g></g></g></svg>
+                                </button>
+                                <button ng-click="app.editStep($index);" class="icon-button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" height="18" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/></svg>
+                                </button>
                             </div>
                         </div>
                         <div class="step-update" ng-if="step.updateStep">
@@ -39,16 +40,18 @@
                                 <option value="bottom">bottom</option>
                                 <option value="left">left</option>
                             </select>
-                            <button ng-click="app.saveStep($index)">  &#x2421;</button>
-                            <button ng-click="app.cancel($index);">Edit</button>
+                            <button ng-click="app.saveStep($index)"">
+                                Save
+                            </button>
+                            <button ng-click="app.cancel($index);">Cancel</button>
                         </div>
                     </div>
-                </div>
-                <div class="footer">
-                    <button type="button" id="alRunIntro" class="al-button">Run intro</button>
+                </main>
+                <footer>
                     <button type="button" id="alNewStep" class="al-button">Add intro</button>
+                    <button type="button" id="alRunIntro" class="al-button">Run intro</button>
                     <button type="button" ng-click="app.saveIntro()" class="al-button">Save Intro</button>
-                </div>
+                </footer>
             </div>
         </div>
     </div>
