@@ -104,8 +104,13 @@ function _removeTooltip(){
 
 //Save step title, message and position.
 function _saveStep() {
-    var title = document.querySelector('#intro-title').value;
+    var title = document.querySelector('#intro-title').value.trim();
     // var msg = document.querySelector('#intro-msg').value;
+
+    if(!title.length){
+        alert("Intro message can't be empty.");
+        return;
+    }
 
     addIntroStep({
         element : liveStep.selector,
@@ -519,8 +524,8 @@ function _showTooltip(element) {
     //add class to tooltip text layer;
     //tooltipTextLayer.className = 'introjs-tooltiptext';
     tooltipInputLayer.innerHTML = [
-        '<textarea rows="2" class="al-custom-input" id="intro-title" placeholder="Enter message..." name="message" />',
-        '</textarea>'].join(' ');;
+        '<textarea rows="3" class="al-textarea" id="intro-title" placeholder="Enter message..." name="message" />',
+        '</textarea>'].join('');
 
     //tooltip class to tooltip main layer and append textlayer to it
     tooltipLayer.className = 'introjs-tooltip';
@@ -550,7 +555,7 @@ function _showTooltip(element) {
 
     saveStepButton = document.createElement('div');
     saveStepButton.className = 'al-custom-btn';
-    saveStepButton.innerHTML = '<a role="button" tabindex="0">SAVE</a>';
+    saveStepButton.innerHTML = '<a role="button" tabindex="0" class="al-button">SAVE</a>';
 
     saveStepButton.onclick = function(e){
         e.preventDefault();

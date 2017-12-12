@@ -17,7 +17,7 @@ router.get('/onboard/fetch', function (req, res, next) {
 			res.send(err);
 		}
 
-		var jsonObject = JSON.stringify(introSteps.steps)
+		var jsonObject = JSON.stringify(introSteps.steps);
 
 		res.send(`var jsonObject = ${jsonObject}`);
 
@@ -55,4 +55,4 @@ router.post('/steps', function (req, res, next) {
 });
 
 
-module.exports = router
+module.exports = router;
