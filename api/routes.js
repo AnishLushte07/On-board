@@ -1,6 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var db = require('./conn');
+var fs = require('fs');
+var path = require('path');
+var filepath = path.join(__dirname, 'script.js');
+
+console.log(filepath);
+
 // middleware that is specific to this router
 router.use(function timeLog (req, res, next) {
   console.log('Time: ', Date.now())
@@ -8,21 +14,22 @@ router.use(function timeLog (req, res, next) {
 });
 
 
-router.get('/onboard/fetch', function (req, res, next) {
- 
-  var query = req.query;
+router.get('/onboard/loadfiles/:filename', function (req, res, next) {
+	fs.readFile(filepath, function (err, data) {
+	  if (err) throw err;
+	  res.sendFile(filepath);
+	});
+});
 
+router.get('/onboard/fetch', function (req, res, next) {
+  var query = req.query;
   db.intros.findOne({name: query.name, time: parseInt(query.time)}, function(err, introSteps){
 		if(err){
 			res.send(err);
 		}
-
 		var jsonObject = JSON.stringify(introSteps.steps)
-
 		res.send(`var jsonObject = ${jsonObject}`);
-
 	});
-
 });
 
 // define the home page route
