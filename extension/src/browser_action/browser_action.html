@@ -33,35 +33,62 @@
                             </div>
                         </div>
                         <div class="step-update" ng-if="step.updateStep">
-                            <input type="text" ng-model="step.intro">
-                            <select name="position" id="step-position" ng-model="step.position">
-                                <option value="top">top</option>
-                                <option value="right">right</option>
-                                <option value="bottom">bottom</option>
-                                <option value="left">left</option>
-                            </select>
-                            <button ng-click="app.saveStep($index)"">
-                                Save
-                            </button>
-                            <button ng-click="app.cancel($index);">Cancel</button>
+                            <div style="padding: 5px 0;display: flex;align-items: flex-start;">
+                                <label>Intro :</label>
+                                <textarea style="flex: 1 0 0;margin-left: 5px;" rows="3" type="text" ng-model="step.intro"></textarea>
+                            </div>
+                            <div style="padding: 5px 0;display: flex;align-items: flex-start;">
+                                <label>Tooltip position: </label>
+                                <select style="flex: 1 0 0;margin-left: 5px;" name="position" id="step-position" ng-model="step.position">
+                                    <option value="top">top</option>
+                                    <option value="right">right</option>
+                                    <option value="bottom">bottom</option>
+                                    <option value="left">left</option>
+                                </select>
+                            </div>
+                            <div style="padding: 5px 0;">
+                                <button ng-click="app.saveStep($index)" class="edit-btn">
+                                    Save
+                                </button>
+                                <button ng-click="app.cancel($index);" class="edit-btn">Cancel</button>
+                            </div>
                         </div>
                     </div>
                 </main>
                 <footer>
                     <button type="button" id="alNewStep" class="al-button">Add intro</button>
                     <button type="button" id="alRunIntro" class="al-button">Run intro</button>
-                    <button type="button" ng-click="app.saveIntro()" class="al-button">Save Intro</button>
+                    <button type="button" class="al-button" data-toggle="modal" data-target="#myModal">Save Intro</button>
+                    <!--ng-click="app.saveIntro()"-->
                 </footer>
             </div>
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Modal Header</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>This is a small modal.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
+
 </div>
 <!--<script src="scrappy.js"></script>-->
 <script src="../../lib/angular/jquery.js"></script>
 
 <script src="../../lib/angular/angular.js"></script>
-<script src="../../lib/angular/ng-file-upload.min.js"></script>
 <script src="../../lib/angular/angular-animate.js"></script>
+<script src="../../lib/angular/bootstrap.min.js"></script>
 <script src="../../app/app.js"></script>
 <script src="../../app/app.controller.js"></script>
 <script src="./popup.js"></script>
