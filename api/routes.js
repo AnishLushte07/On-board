@@ -9,58 +9,86 @@ console.log(filepath);
 
 // middleware that is specific to this router
 router.use(function timeLog (req, res, next) {
-  console.log('Time: ', Date.now())
-  next()
+    console.log('Time: ', Date.now())
+    next()
 });
 
 
 router.get('/onboard/loadfiles/:filename', function (req, res, next) {
-	fs.readFile(filepath, function (err, data) {
-	  if (err) throw err;
-	  res.sendFile(filepath);
-	});
+    fs.readFile(filepath, function (err, data) {
+        if (err) throw err;
+        res.sendFile(filepath);
+    });
 });
 
 router.get('/onboard/fetch', function (req, res, next) {
-  var query = req.query;
-  db.intros.findOne({name: query.name, time: parseInt(query.time)}, function(err, introSteps){
-		if(err){
-			res.send(err);
-		}
+    var query = req.query;
+    db.intros.findOne({name: query.name, time: parseInt(query.time)}, function(err, introSteps){
+        if(err){
+            res.send(err);
+        }
 
-		var jsonObject = JSON.stringify(introSteps.steps);
+        var jsonObject = JSON.stringify(introSteps.steps);
 
-		res.send(`var jsonObject = ${jsonObject}`);
-	});
+        res.send(`var jsonObject = ${jsonObject}`);
+    });
 });
 
 // define the home page route
 router.post('/steps', function (req, res, next) {
-  var steps = req.body;
-  if(!steps.length){
-		res.status(400);
-		res.json({
-			"error" : "Bad Data"
-		});
-	}else{
-		steps = steps.map(function(v){
-			return { intro: v.intro, position: v.position, element: v.element};
-		})
+    var intro = req.body;
 
-		var time = Date.now();
-		var data = {
-			name: 'name',
-			steps: steps,
-			time: time
-		}
+    console.log(intro);
+    if(!intro.websiteName){
+        res.status(400);
+        res.json({
+            "error" : "Bad Data"
+        });
+    }else{
 
-		db.intros.insert(data ,function(err, steps){
-			if(err){
-				res.send(err);
-			}
-			res.json(steps);
-		});
-	}
+        var id = db.intros.find({websiteName : intro.websiteName} , function(err, intros){
+            if(err){
+                res.send(err);
+            }
+
+            var steps = intro.steps.map(function(v){
+                return { intro: v.intro, position: v.position, element: v.element};
+            });
+
+            var temp = {
+                name : intro.name,
+                steps : steps
+            };
+
+            db.intros.update({_id : intros[0]._id}, {$push:{intros:temp}},
+                function (err, intros) {
+                    console.log(intros);
+                    res.send(intros);
+                });
+
+        });
+
+        console.log(id);
+        // res.send();
+
+        /*steps = steps.map(function(v){
+            return { intro: v.intro, position: v.position, element: v.element};
+        })
+
+        var time = Date.now();
+        var data = {
+            name: 'name',
+            steps: steps,
+            time: time
+        }
+
+        db.intros.insert(data ,function(err, steps){
+            if(err){
+                res.send(err);
+            }
+            res.json(steps);
+        });*/
+    }
 });
 
 

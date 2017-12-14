@@ -26,14 +26,28 @@ angular.module('alOnBoarding')
             }
         );
 
-        function saveIntro(){
-            console.log(vm.steps);
-            $http.post(apiUrl+'/steps', vm.steps, {})
-                .then(function(res){
-                    console.log(res);
-                }, function(err){
-                    console.log(err);
+
+
+        function saveIntro(name){
+
+            chrome.tabs.query({ active: true, currentWindow: true}, function(tabs){
+                chrome.tabs.sendMessage(tabs[0].id, {message: 'getHostname'}, function(res){
+
+                    var temp = {
+                        steps : vm.steps,
+                        name : name,
+                        websiteName : res
+                    };
+
+                    $http.post(apiUrl+'/steps', temp, {})
+                        .then(function(res){
+                            console.log(res);
+                        }, function(err){
+                            console.log(err);
+                        });
+
                 });
+            });
         }
 
         function cancel(stepIndex){
