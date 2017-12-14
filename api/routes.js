@@ -34,10 +34,33 @@ router.get('/onboard/fetch', function (req, res, next) {
     });
 });
 
+router.post('/getSteps', function (req, res, next) {
+    var data = req.body;
+
+    if(!data.hostname){
+        res.status(400);
+        res.json({
+            "error" : "Bad Data"
+        });
+    }else{
+         db.intros.find({"websiteName": data.hostname}, {"intros" : 1} , function(err, intros){
+
+            if(err){
+                res.send(err);
+            }
+ 			
+ 			res.header('Access-Control-Allow-Origin', '*');
+ 			res.json(intros);
+
+        });
+    }
+});
+
 // define the home page route
 router.post('/steps', function (req, res, next) {
+	console.log('get steps');
     var intro = req.body;
-
+    intro.websiteName = 'localhost'
     console.log(intro);
     if(!intro.websiteName){
         res.status(400);
@@ -45,49 +68,22 @@ router.post('/steps', function (req, res, next) {
             "error" : "Bad Data"
         });
     }else{
-
-        var id = db.intros.find({websiteName : intro.websiteName} , function(err, intros){
+         db.intros.findOne({websiteName : intro.websiteName} , function(err, userIntros){
             if(err){
                 res.send(err);
             }
-
+ 
             var steps = intro.steps.map(function(v){
                 return { intro: v.intro, position: v.position, element: v.element};
             });
 
-            var temp = {
-                name : intro.name,
-                steps : steps
-            };
+            userIntros.intros.push({name : intro.name, steps: steps});
 
-            db.intros.update({_id : intros[0]._id}, {$push:{intros:temp}},
-                function (err, intros) {
-                    console.log(intros);
-                    res.send(intros);
-                });
-
+            db.intros.save(userIntros, function (err, intros) {
+                console.log(intros);
+                res.send(intros);
+            });
         });
-
-        console.log(id);
-        // res.send();
-
-        /*steps = steps.map(function(v){
-            return { intro: v.intro, position: v.position, element: v.element};
-        })
-
-        var time = Date.now();
-        var data = {
-            name: 'name',
-            steps: steps,
-            time: time
-        }
-
-        db.intros.insert(data ,function(err, steps){
-            if(err){
-                res.send(err);
-            }
-            res.json(steps);
-        });*/
     }
 });
 

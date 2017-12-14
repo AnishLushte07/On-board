@@ -71,20 +71,8 @@
 							</div>
 							<script>
 
-							    var getIntros = function () {
-							            return [
-							                {
-							                    name: "intro number one",
-							                    id: 1
-							                },
-							                {
-							                    name: "intro number two",
-							                    id: 2
-							                }
-							            ];
-							    };
-
 							    var open = false;
+							    var intros;
 
 							    function getAriaLabel(ele) {
 							        var ariaLabel;
@@ -96,12 +84,18 @@
 
 							    function runIntro(e) {
 							        var introName = getAriaLabel(e.target);
-							        console.log(introName);	
+
+							        var index = intros.findIndex(function(v){
+							        	return v.name == introName;
+							        });
+
 							        showPopup();
+
+							        sendMessage(JSON.stringify({ message:'runIntro', steps : intros[index].steps}));
 							    }
 
 							    function showPopup() {
-							        var intros = sendMessage('getIntros');
+							        sendMessage(JSON.stringify({ message:'getIntros'}));
 							        open = !open;
 							        document.getElementById('popup').style.height = open ? '300px' : '0';
 							    }
@@ -142,6 +136,7 @@
 						        	var data = JSON.parse(e.data);
 
 						        	if(data.message == 'introsList'){
+						        		intros = data.intros;
 							            listIntrosInview(data.intros);
 						        	}
 						        });
@@ -198,24 +193,43 @@
     }
 
     var loadIntros = function(){
-    	var a = [
-	                {
-	                    name: "intro number one",
-	                    id: 1
-	                },
-	                {
-	                    name: "intro number two",
-	                    id: 2
-	                }
-	            ];
+    	console.log('load steps')
+		var xhttp;
+	  	if (window.XMLHttpRequest) {
+		    // code for modern browsers
+		    xhttp = new XMLHttpRequest();
+	    } else {
+	    	// code for IE6, IE5
+	    	xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		xhttp.onreadystatechange = function() {
+	    	if (this.readyState == 4 && this.status == 200) {
+	    		var data = JSON.parse(this.responseText);
+	    		console.log(data);
+	    		sendMessage(JSON.stringify({ message:'introsList', intros : data[0].intros}))
+	    	}
+	    };
+		
+		xhttp.open("POST", hostname+'/api/getSteps', true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  		xhttp.send("hostname=localhost"+window.location.hostname);
+	    // xhttp.send();
 
-	    sendMessage(JSON.stringify({ message:'introsList', intros : a}))
 	    // alIntroElement.contentWindow.postMessage(JSON.stringify({ message:'introsList', intros : a}), '*');
     }
 
     bindEvent(window, 'message', function (e) {
-        if(e.data == 'getIntros'){
+    	console.log(e.data);
+    	var data = JSON.parse(e.data);
+        if(data.message == 'getIntros'){
         	loadIntros();	
+        }else if(data.message == 'runIntro'){
+        	console.log(data);
+        	var intro = introJs();
+		    intro.setOptions({
+		        steps: data.steps
+		    });
+		    intro.start();
         }
     });
 
