@@ -104,6 +104,8 @@ function _removeTooltip(){
 
 //Save step title, message and position.
 function _saveStep() {
+
+
     var title = document.querySelector('#intro-title').value.trim();
     // var msg = document.querySelector('#intro-msg').value;
 
@@ -152,7 +154,9 @@ function addIntroBox(e) {
 
 
 function _addNewStep() {
-    console.log('add new step');
+
+    console.log(document.getElementsByClassName('introjs-tooltipReferenceLayer'));
+
     _registerMousemoveListener.call(self);
 }
 

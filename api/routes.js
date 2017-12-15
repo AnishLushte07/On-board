@@ -37,6 +37,8 @@ router.get('/onboard/fetch', function (req, res, next) {
 router.post('/getSteps', function (req, res, next) {
     var data = req.body;
 
+    console.log(data);
+
     if(!data.hostname){
         res.status(400);
         res.json({
@@ -60,7 +62,7 @@ router.post('/getSteps', function (req, res, next) {
 router.post('/steps', function (req, res, next) {
 	console.log('get steps');
     var intro = req.body;
-    intro.websiteName = 'localhost'
+    // intro.websiteName = 'localhost'
     console.log(intro);
     if(!intro.websiteName){
         res.status(400);
@@ -77,7 +79,12 @@ router.post('/steps', function (req, res, next) {
                 return { intro: v.intro, position: v.position, element: v.element};
             });
 
-            userIntros.intros.push({name : intro.name, steps: steps});
+            if(userIntros){
+                userIntros.intros.push({name : intro.name, steps: steps});
+            }else{
+                var userIntros = { websiteName: intro.websiteName, intros: [{name: intro.name, steps: steps}] };
+            }
+
 
             db.intros.save(userIntros, function (err, intros) {
                 console.log(intros);

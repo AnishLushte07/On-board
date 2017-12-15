@@ -18,7 +18,7 @@
                     <span>Intro js</span>
                 </header>
                 <main>
-                    <div ng-repeat="step in app.steps track by $index">
+                    <div ng-repeat="step in app.steps track by $index" style="border: 1px solid #ccc;border-radius: 3px;">
                         <div class="step-view" ng-if="!step.updateStep">
                             <div class="step-data">
                                 <p>{{step.intro}}</p>
