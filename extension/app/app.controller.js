@@ -49,7 +49,12 @@ angular.module('alOnBoarding')
 
                         $http.post(apiUrl+'/save/steps', temp, {})
                         .then(function(res){
+<<<<<<< HEAD
                             console.log('api response ' ,res);
+=======
+                            console.log(res);
+                            angular.element('#myModal .close').click();
+>>>>>>> 3c23474c0d2a0df49aebdbc1de5f558064068d00
                         }, function(err){
                             console.log(err);
                         });
@@ -66,6 +71,7 @@ angular.module('alOnBoarding')
         }
 
         function saveStep(stepIndex){
+
             vm.steps[stepIndex].updateStep = false;
             chrome.tabs.query({ active: true, currentWindow: true}, function(tabs){
                 chrome.tabs.sendMessage(tabs[0].id, {message: 'updateStep', stepIndex : stepIndex, data: vm.steps[stepIndex]}, function(res){

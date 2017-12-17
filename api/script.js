@@ -1,6 +1,6 @@
 (function(){
 
-	var hostname = 'http://localhost:3000';
+    var hostname = 'http://localhost:3000';
 
 
     var D = document;
@@ -56,6 +56,28 @@
 							        .intros-list .intro h4{
 							            margin: 0;
 							        }
+							        
+							        ::-webkit-scrollbar {
+    									width: 8px;
+									}
+ 
+									/* Track */
+									::-webkit-scrollbar-track {
+    									-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    background: rgba(60,55,55,0.8); 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(255,0,0,0.4); 
+}
 							    </style>
 							</head>
 							<body>
@@ -89,15 +111,37 @@
 							        	return v.name == introName;
 							        });
 
-							        showPopup();
-
-							        sendMessage(JSON.stringify({ message:'runIntro', steps : intros[index].steps}));
-							    }
-
-							    function showPopup() {
-							        sendMessage(JSON.stringify({ message:'getIntros'}));
 							        open = !open;
 							        document.getElementById('popup').style.height = open ? '300px' : '0';
+									
+									closeListPopup();
+									
+							        sendMessage(JSON.stringify({ message:'runIntro', steps : intros[index].steps}));
+							    }
+								
+								function closeListPopup(){
+								
+									setTimeout(function(){
+							    			sendMessage(JSON.stringify({ message:'setHeight'}));
+							    		}, 200);
+							    											
+									var temp = document.getElementsByClassName('intros-list')[0];
+							    	while (temp.hasChildNodes()) {
+							            temp.removeChild(temp.firstChild);
+							        }
+								}
+								
+							    function showPopup() {
+							        open = !open;
+							    	
+							        document.getElementById('popup').style.height = open ? '300px' : '0';
+							        
+							    	if(open){
+							        	sendMessage(JSON.stringify({ message:'getIntros'}));
+							    	}else{
+							    		closeListPopup();
+							    	}
+							        
 							    }
 
 							    function bindEvent(element, eventName, eventHandler) {
@@ -149,7 +193,7 @@
 							</script>
 							</body>
 							</html>`;
-    
+
     D.addEventListener('DOMContentLoaded', function () {
         console.log('Dom content loaded');
         appendIframe();
@@ -170,7 +214,7 @@
 
     function appendIframe() {
         alIntroElement = document.createElement('iframe');
-        alIntroElement.setAttribute('style', 'width:350px;height: 350px;background: transparent none repeat scroll 0% 0%;border: medium none;bottom: 12px;position: fixed;right: 18px;top: auto;z-index: 1050;');
+        alIntroElement.setAttribute('style', 'width:80px;height: 80px;background: transparent none repeat scroll 0% 0%;border: medium none;bottom: 12px;position: fixed;right: 18px;top: auto;z-index: 1050;');
 
         D.body.appendChild(alIntroElement);
 
@@ -178,11 +222,11 @@
         temp.write(template);
         temp.close();
     }
-	
-	var sendMessage = function(msg) {
+
+    var sendMessage = function(msg) {
         // Make sure you are sending a string, and to stringify JSON
         alIntroElement.contentWindow.postMessage(msg, '*');
-    };    
+    };
 
     function bindEvent(element, eventName, eventHandler) {
         if (element.addEventListener){
@@ -193,66 +237,69 @@
     }
 
     var loadIntros = function(){
-    	console.log('load steps')
-		var xhttp;
-	  	if (window.XMLHttpRequest) {
-		    // code for modern browsers
-		    xhttp = new XMLHttpRequest();
-	    } else {
-	    	// code for IE6, IE5
-	    	xhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		}
-		xhttp.onreadystatechange = function() {
-	    	if (this.readyState == 4 && this.status == 200) {
-	    		var data = JSON.parse(this.responseText);
-	    		console.log(data);
-	    		sendMessage(JSON.stringify({ message:'introsList', intros : data[0].intros}))
-	    	}
-	    };
-		
-		xhttp.open("POST", hostname+'/api/getSteps', true);
-		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  		xhttp.send("hostname=localhost"+window.location.hostname);
-	    // xhttp.send();
+        var xhttp;
+        if (window.XMLHttpRequest) {
+            // code for modern browsers
+            xhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var data = JSON.parse(this.responseText);
+                if(data && data.length){
+                	sendMessage(JSON.stringify({ message:'introsList', intros : data[0].intros}))
+				}
+            }
+        };
 
-	    // alIntroElement.contentWindow.postMessage(JSON.stringify({ message:'introsList', intros : a}), '*');
+        xhttp.open("POST", hostname+'/api/getSteps', true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("hostname="+window.location.hostname);
+
+        // alIntroElement.contentWindow.postMessage(JSON.stringify({ message:'introsList', intros : a}), '*');
     }
 
     bindEvent(window, 'message', function (e) {
-    	console.log(e.data);
-    	var data = JSON.parse(e.data);
-        if(data.message == 'getIntros'){
-        	loadIntros();	
-        }else if(data.message == 'runIntro'){
-        	console.log(data);
-        	var intro = introJs();
-		    intro.setOptions({
-		        steps: data.steps
-		    });
-		    intro.start();
+        console.log(e.data);
+        var data = JSON.parse(e.data);
+        if('getIntros' == data.message){
+            loadIntros();
+            alIntroElement.style.height = '370px';
+            alIntroElement.style.width = '270px';
+        }else if('runIntro' == data.message){
+            var intro = introJs();
+            intro.setOptions({
+                steps: data.steps
+            });
+            intro.start();
+        }else if('setHeight' == data.message){
+            alIntroElement.style.height = '80px';
+            alIntroElement.style.width = '80px';
         }
     });
 
-	function loadjscssfile(filename, filetype){
-	    if (filetype=="js"){ //if filename is a external JavaScript file
-	        var fileref=document.createElement('script')
-	        fileref.setAttribute("type","text/javascript")
-	        fileref.setAttribute("src", hostname+'/'+filename)
-	        fileref.async = true;
-	    }
-	    else if (filetype=="css"){ //if filename is an external CSS file
-	        var fileref=document.createElement("link")
-	        fileref.setAttribute("rel", "stylesheet")
-	        fileref.setAttribute("type", "text/css")
-	        fileref.setAttribute("href", hostname+'/'+filename)
-	        fileref.async = true;
-	    }
-	    if (typeof fileref!="undefined"){
-	        document.getElementsByTagName("head")[0].appendChild(fileref);
-	    }
-	}
-	 
-	loadjscssfile("intro.css", "css");
-	loadjscssfile("intro.js", "js");
+    function loadjscssfile(filename, filetype){
+        if (filetype=="js"){ //if filename is a external JavaScript file
+            var fileref=document.createElement('script')
+            fileref.setAttribute("type","text/javascript")
+            fileref.setAttribute("src", hostname+'/'+filename)
+            fileref.async = true;
+        }
+        else if (filetype=="css"){ //if filename is an external CSS file
+            var fileref=document.createElement("link")
+            fileref.setAttribute("rel", "stylesheet")
+            fileref.setAttribute("type", "text/css")
+            fileref.setAttribute("href", hostname+'/'+filename)
+            fileref.async = true;
+        }
+        if (typeof fileref!="undefined"){
+            document.getElementsByTagName("head")[0].appendChild(fileref);
+        }
+    }
+
+    loadjscssfile("intro.css", "css");
+    loadjscssfile("intro.js", "js");
 
 })();
