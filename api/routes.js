@@ -13,7 +13,6 @@ router.use(function timeLog (req, res, next) {
     next()
 });
 
-
 router.get('/onboard/loadfiles/:filename', function (req, res, next) {
     fs.readFile(filepath, function (err, data) {
         if (err) throw err;
@@ -21,16 +20,18 @@ router.get('/onboard/loadfiles/:filename', function (req, res, next) {
     });
 });
 
-router.get('/onboard/fetch', function (req, res, next) {
-    var query = req.query;
-    db.intros.findOne({name: query.name, time: parseInt(query.time)}, function(err, introSteps){
+router.get('/onboard/fetch/:name/:id/file.js', function (req, res, next) {
+    var params = req.params;
+    db.intros.findOne({name: params.name, uniqueId: parseInt(params.id)}, function(err, introSteps){
         if(err){
             res.send(err);
         }
-
-        var jsonObject = JSON.stringify(introSteps.steps);
-
-        res.send(`var jsonObject = ${jsonObject}`);
+        console.log(introSteps);
+        var fileJs = fs.readFileSync('./loadIntro.js', 'utf-8');
+        var out = fileJs.replace('$steps', JSON.stringify(introSteps));
+        // var jsonObject = JSON.stringify(introSteps.steps);
+        res.setHeader('content-type', 'application/javascript');
+        res.send(out);
     });
 });
 
@@ -58,10 +59,8 @@ router.post('/getSteps', function (req, res, next) {
 
 // define the home page route
 router.post('/steps', function (req, res, next) {
-	console.log('get steps');
     var intro = req.body;
     intro.websiteName = 'localhost'
-    console.log(intro);
     if(!intro.websiteName){
         res.status(400);
         res.json({
@@ -83,6 +82,39 @@ router.post('/steps', function (req, res, next) {
                 console.log(intros);
                 res.send(intros);
             });
+        });
+    }
+});
+
+
+router.post('/save/steps', function (req, res, next) {
+    console.log('save steps api hit');
+    var intro = req.body;
+    intro.websiteName = 'localhost'
+    if(!intro.websiteName){
+        res.status(400);
+        res.json({
+            "error" : "Bad Data"
+        });
+    }else{
+        
+        var steps = intro.steps.map(function(v){
+                return { intro: v.intro, position: v.position, element: v.element};
+            });
+
+        var data = {
+            websiteName: intro.websiteName,
+            steps: steps,
+            name: intro.name,
+            uniqueId: Date.now()
+        };
+
+         db.intros.insert(data , function(err, intro){
+            if(err){
+                res.send(err);
+            }
+            var instroUrl = `//localhost:3000/api/onboard/fetch/${intro.name}/${intro.uniqueId}/file.js`;
+            res.send({ instroUrl: instroUrl});
         });
     }
 });
