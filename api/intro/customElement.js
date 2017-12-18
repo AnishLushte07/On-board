@@ -83,21 +83,45 @@
 							    }
 
 							    function runIntro(e) {
+							        
 							        var introName = getAriaLabel(e.target);
 
 							        var index = intros.findIndex(function(v){
 							        	return v.name == introName;
 							        });
 
-							        showPopup();
-
-							        sendMessage(JSON.stringify({ message:'runIntro', steps : intros[index].steps}));
-							    }
-
-							    function showPopup() {
-							        sendMessage(JSON.stringify({ message:'getIntros'}));
 							        open = !open;
 							        document.getElementById('popup').style.height = open ? '300px' : '0';
+									
+									closeListPopup();
+									
+							        sendMessage(JSON.stringify({ message:'runIntro', steps : intros[index].steps}));
+							        
+							    }
+                                
+                                function closeListPopup(){
+								
+									setTimeout(function(){
+							    			sendMessage(JSON.stringify({ message:'setHeight'}));
+							    		}, 200);
+							    											
+									var temp = document.getElementsByClassName('intros-list')[0];
+							    	while (temp.hasChildNodes()) {
+							            temp.removeChild(temp.firstChild);
+							        }
+								}
+                                
+							    function showPopup() {
+							        
+							        open = !open;
+							    	
+							        document.getElementById('popup').style.height = open ? '300px' : '0';
+							        
+							    	if(open){
+							        	sendMessage(JSON.stringify({ message:'getIntros'}));
+							    	}else{
+							    		closeListPopup();
+							    	}
 							    }
 
 							    function bindEvent(element, eventName, eventHandler) {
@@ -157,7 +181,7 @@
 
     function appendIframe() {
         alIntroElement = document.createElement('iframe');
-        alIntroElement.setAttribute('style', 'width:350px;height: 350px;background: transparent none repeat scroll 0% 0%;border: medium none;bottom: 12px;position: fixed;right: 18px;top: auto;z-index: 1050;');
+        alIntroElement.setAttribute('style', 'width:80px;height: 80px;background: transparent none repeat scroll 0% 0%;border: medium none;bottom: 12px;position: fixed;right: 18px;top: auto;z-index: 1050;');
 
         D.body.appendChild(alIntroElement);
 
@@ -186,14 +210,19 @@
 
     bindEvent(window, 'message', function (e) {
     	var data = JSON.parse(e.data);
-        if(data.message == 'getIntros'){
-        	loadIntros();	
-        }else if(data.message == 'runIntro'){
+        if('getIntros' == data.message){
+            alIntroElement.style.height = '370px';
+            alIntroElement.style.width = '270px';
+        	loadIntros();
+        }else if( 'runIntro' == data.message){
         	var intro = introJs();
 		    intro.setOptions({
 		        steps: data.steps
 		    });
 		    intro.start();
+        }else if('setHeight' == data.message){
+            alIntroElement.style.height = '80px';
+            alIntroElement.style.width = '80px';
         }
     });
 

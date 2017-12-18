@@ -4,8 +4,7 @@ var db = require('./conn');
 var fs = require('fs');
 var path = require('path');
 var filepath = path.join(__dirname, 'script.js');
-
-console.log(filepath);
+var API_HOST = 'http://127.0.0.1:3000';
 
 // middleware that is specific to this router
 router.use(function timeLog (req, res, next) {
@@ -26,7 +25,7 @@ router.get('/onboard/fetch/:name/:id/file.js', function (req, res, next) {
         if(err){
             res.send(err);
         }
-        console.log(introSteps);
+
         var fileJs = fs.readFileSync('./loadIntro.js', 'utf-8');
         var out = fileJs.replace('$steps', JSON.stringify(introSteps));
         // var jsonObject = JSON.stringify(introSteps.steps);
@@ -81,7 +80,7 @@ router.post('/steps', function (req, res, next) {
             if(userIntros){
                 userIntros.intros.push({name : intro.name, steps: steps});
             }else{
-                var userIntros = { websiteName: intro.websiteName, intros: [{name: intro.name, steps: steps}] };
+                userIntros = { websiteName: intro.websiteName, intros: [{name: intro.name, steps: steps}] };
             }
 
 
@@ -97,7 +96,7 @@ router.post('/steps', function (req, res, next) {
 router.post('/save/steps', function (req, res, next) {
     console.log('save steps api hit');
     var intro = req.body;
-    intro.websiteName = 'localhost'
+    // intro.websiteName = 'localhost'
     if(!intro.websiteName){
         res.status(400);
         res.json({
@@ -120,8 +119,8 @@ router.post('/save/steps', function (req, res, next) {
             if(err){
                 res.send(err);
             }
-            var instroUrl = `//localhost:3000/api/onboard/fetch/${intro.name}/${intro.uniqueId}/file.js`;
-            res.send({ instroUrl: instroUrl});
+            var introUrl = `<script src="${API_HOST}/api/onboard/fetch/${intro.name}/${intro.uniqueId}/file.js"></script>`;
+            res.send({ introUrl: introUrl});
         });
     }
 });
