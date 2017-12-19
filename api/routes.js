@@ -14,9 +14,9 @@ router.use(function timeLog (req, res, next) {
 
 //fetch intros as per name and id
 //replace $step variable in files by intro.
-router.get('/onboard/fetch/:name/:id/file.js', function (req, res, next) {
+router.get('/onboard/fetch/:nameId/:id/file.js', function (req, res, next) {
     var params = req.params;
-    db.intros.findOne({name: params.name, uniqueId: parseInt(params.id)}, function(err, introSteps){
+    db.intros.findOne({nameId: params.nameId, uniqueId: parseInt(params.id)}, function(err, introSteps){
         if(err){
             res.send(err);
         }
@@ -35,7 +35,9 @@ router.post('/save/steps', function (req, res, next) {
 
     var intro = req.body;
 
-    if(!intro.websiteName){
+    intro.websiteName = 'localhost';
+
+    if(!intro.websiteName || !intro.name || !intro.steps){
         res.status(400);
         res.json({
             "error" : "Bad Data"
@@ -46,10 +48,16 @@ router.post('/save/steps', function (req, res, next) {
                 return { intro: v.intro, position: v.position, element: v.element};
             });
 
+        var nameId  = intro.name.trim().split(' ').filter(function(v){
+            return v != '';
+        }).join('_');
+
+        console.log(nameId);
         var data = {
             websiteName: intro.websiteName,
             steps: steps,
             name: intro.name,
+            nameId: nameId,
             uniqueId: Date.now()
         };
 
@@ -57,7 +65,7 @@ router.post('/save/steps', function (req, res, next) {
             if(err){
                 res.send(err);
             }
-            var introUrl = `<script src="${API_HOST}/api/onboard/fetch/${intro.name}/${intro.uniqueId}/file.js"></script>`;
+            var introUrl = `<script src="${API_HOST}/api/onboard/fetch/${nameId}/${intro.uniqueId}/file.js"></script>`;
             res.send({ introUrl: introUrl});
         });
     }

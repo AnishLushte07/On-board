@@ -10,6 +10,10 @@ var onBoard = (function(){
         _removeTooltip();
     }
 
+    function _clearIntroSteps(){
+        introSteps = [];
+    }
+
     function _getIntroSteps() {
         return introSteps;
     }
@@ -649,7 +653,8 @@ var onBoard = (function(){
         runIntro : _runIntro,
         removeStep: _removeStep,
         updateStep : _updateStep,
-        getIntroSteps : _getIntroSteps
+        getIntroSteps : _getIntroSteps,
+        clearIntroSteps : _clearIntroSteps
     }
 
     return onBoard;

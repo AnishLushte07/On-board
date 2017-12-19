@@ -38,35 +38,50 @@ angular.module('alOnBoarding')
                 document.execCommand('copy');
             }
 
+            function clearIntroSteps(){
+                chrome.tabs.query({ active: true, currentWindow: true}, function(tabs){
+                    chrome.tabs.sendMessage(tabs[0].id, {message: 'clearIntroSteps'}, function(res){
+                        vm.steps = [];
+                    });
+                });
+            }
+
             function saveIntro(name){
 
                 chrome.tabs.query({ active: true, currentWindow: true}, function(tabs){
 
                     chrome.tabs.sendMessage(tabs[0].id, {message: 'getHostname'}, function(res){
 
-                        var temp = {
-                            steps : vm.steps,
-                            name : name,
-                            websiteName : res
-                        };
+                        if(!name){
+                            alert('Please enter name for intro');
+                            return;
+                        } 
 
-                        // $http.post(apiUrl+'/steps', temp, {})
-                        //     .then(function(res){
-                        //         console.log(res);
-                        //     }, function(err){
-                        //         console.log(err);
-                        //     });
+                        if(vm.steps && vm.steps.length){
+                            
+                            var temp = {
+                                steps : vm.steps,
+                                name : name,
+                                websiteName : res
+                            };
+                            
+                            angular.element('#myModal').modal('hide');
 
-                        $http.post(apiUrl+'/save/steps', temp, {})
-                            .then(function(res){
-                                console.log(res);
-                                vm.introUrl = res.data.introUrl;
-                                angular.element('#linkModal').modal('show');
-                            }, function(err){
-                                console.log(err);
-                            });
+                            $http.post(apiUrl+'/save/steps', temp, {})
+                                .then(function(res){
+                                    clearIntroSteps();
+                                    vm.introUrl = res.data.introUrl;
+                                    angular.element('#linkModal').modal('show');
+                                }, function(err){
+                                    console.log(err);
+                                });
 
-                        angular.element('#myModal .close').modal('hide');
+
+                        }else{
+                            alert('Please add at least one step to intro.');
+                        }
+
+                        
 
                     });
 

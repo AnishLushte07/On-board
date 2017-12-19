@@ -70,6 +70,8 @@ chrome.runtime.onMessage.addListener(
             onBoard.updateStep(request.stepIndex, request.data);
         }else if('getHostname' === request.message){
             response = window.location.hostname;
+        }else if('clearIntroSteps' === request.hostname){
+            onBoard.clearIntroSteps();
         }
 
         sendResponse(response);
