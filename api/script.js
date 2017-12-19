@@ -282,16 +282,16 @@
 
     function loadjscssfile(filename, filetype){
         if (filetype=="js"){ //if filename is a external JavaScript file
-            var fileref=document.createElement('script')
-            fileref.setAttribute("type","text/javascript")
-            fileref.setAttribute("src", hostname+'/'+filename)
+            var fileref=document.createElement('script');
+            fileref.setAttribute("type","text/javascript");
+            fileref.setAttribute("src", hostname+'/'+filename);
             fileref.async = true;
         }
         else if (filetype=="css"){ //if filename is an external CSS file
-            var fileref=document.createElement("link")
-            fileref.setAttribute("rel", "stylesheet")
-            fileref.setAttribute("type", "text/css")
-            fileref.setAttribute("href", hostname+'/'+filename)
+            var fileref=document.createElement("link");
+            fileref.setAttribute("rel", "stylesheet");
+            fileref.setAttribute("type", "text/css");
+            fileref.setAttribute("href", hostname+'/'+filename);
             fileref.async = true;
         }
         if (typeof fileref!="undefined"){

@@ -1,4 +1,4 @@
-//resolve html tag, which is more dominant than <body>
+
 
 /*Move webpage html by 30px and make room for side panel */
 var width = 30;
@@ -6,7 +6,7 @@ var html;
 if (document.documentElement) {
     html = document.documentElement;
 } else if (document.getElementsByTagName('html') && document.getElementsByTagName('html')[0]) {
-    html = $(document.getElementsByTagName('html')[0]);
+    html = document.getElementsByTagName('html')[0];
 } else {
     alert('no html tag retrieved...!');
 }
@@ -53,7 +53,6 @@ html.append(iframe);
 /*Listent for post message event from iframe*/
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse){
-        console.log('contnet_script runttime listener');
 
         var response;
 
@@ -62,25 +61,27 @@ chrome.runtime.onMessage.addListener(
         }else if('closeFrame' === request.message){
             iframe.style.width = '30px';
         }else if('addNewStep' === request.message){
-            _addNewStep();
+            onBoard.addNewStep();
         }else if('runIntro' === request.message){
-            _runIntro();
+            onBoard.runIntro();
         }else if('removeStep' === request.message){
-            removeStep(request.stepIndex);
+            onBoard.removeStep(request.stepIndex);
         }else if('updateStep' === request.message){
-            updateStep(request.stepIndex, request.data);
+            onBoard.updateStep(request.stepIndex, request.data);
         }else if('getHostname' === request.message){
             response = window.location.hostname;
         }
+
         sendResponse(response);
     }
 );
 
 
 function openSidePanel() {
+
     chrome.runtime.sendMessage({
         message: "addOpenClass",
-        steps: introSteps
+        steps: onBoard.getIntroSteps()
     });
 
     iframe.style.width = '300px';
