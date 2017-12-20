@@ -1,49 +1,50 @@
 var express = require('express');
-
 var router = express.Router();
-
 var db = require('./conn');
-
 var fs = require('fs');
-
 var API_HOST = process.env.API_HOST;
 
 
-// middleware that is specific to this router
-router.use(function timeLog (req, res, next) {
-    next()
-});
+router.get('/onboard/fetch/:nameId/:id/file.js', fetchStep);
+router.post('/save/steps', saveIntro);
 
-//fetch intros as per name and id
-//replace $step variable in files by intro.
-router.get('/onboard/fetch/:nameId/:id/file.js', function (req, res, next) {
+
+function handleError(res, err, statusCode){
+    statusCode = statusCode || 500;
+    res.status(statusCode).send(err);
+}
+
+function fetchStep(req, res) {
     var params = req.params;
     db.intros.findOne({nameId: params.nameId, uniqueId: parseInt(params.id)}, function(err, introSteps){
+
         if(err){
-            res.send(err);
+            handleError(res, err);
         }
 
-        var fileJs = fs.readFileSync('./loadIntro.js', 'utf-8');
-        var out = fileJs.replace('$steps', JSON.stringify(introSteps));
+        if(introSteps){
+            var fileJs = fs.readFileSync('./loadIntro.js', 'utf-8');
+            var out = fileJs.replace('$steps', JSON.stringify(introSteps));
 
-        res.setHeader('Allow-control-access-origin', '*');
-        res.setHeader('content-type', 'application/javascript');
-        res.send(out);
+            res.setHeader('Allow-control-access-origin', '*');
+            res.setHeader('content-type', 'application/javascript');
+            res.send(out);
+        }else{
+            handleError(res, {error: 'Intro not found.'});
+        }
+
+        
     });
-});
+}
 
-
-router.post('/save/steps', function (req, res, next) {
-
+function saveIntro(req, res){
     var intro = req.body;
 
     intro.websiteName = 'localhost';
 
     if(!intro.websiteName || !intro.name || !intro.steps){
-        res.status(400);
-        res.json({
-            "error" : "Bad Data"
-        });
+        handleError(res, {error : 'Bad data.'});
+
     }else{
         
         var steps = intro.steps.map(function(v){
@@ -64,13 +65,13 @@ router.post('/save/steps', function (req, res, next) {
 
          db.intros.insert(data , function(err, intro){
             if(err){
-                res.send(err);
+                handleError(res, err);
+                return;
             }
             var introUrl = `<script src="${API_HOST}/api/onboard/fetch/${nameId}/${intro.uniqueId}/file.js"></script>`;
-            res.send({ introUrl: introUrl});
+            res.json({ introUrl: introUrl});
         });
     }
-});
-
+}
 
 module.exports = router;

@@ -3,6 +3,21 @@ body{
     overflow-x: hidden;
 }
 
+.vertical-text{
+    transform: rotate(90deg);
+    transform-origin: 0 0;
+    white-space: nowrap;
+    position: absolute;
+    top: 40%;
+    left: 23px;
+    bottom: 0;
+    color: white;
+}
+
+#openPanel{
+    cursor: pointer;
+}
+
 .al-button {
     padding: 4px 6px;
     text-align: center;
