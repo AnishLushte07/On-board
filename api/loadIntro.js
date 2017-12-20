@@ -23,9 +23,8 @@
 	
 	document.addEventListener('DOMContentLoaded', function(){
 		if(!window.introFilesLoaded){
-			loadjscssfile("intro.css", "css");
-			loadjscssfile("intro.js", "js");
-			loadjscssfile("customElement.js", "js");
+			loadjscssfile("on-boarding.css", "css");
+			loadjscssfile("on-boarding.js", "js");
 			window.introFilesLoaded = true;
 		}
 	});

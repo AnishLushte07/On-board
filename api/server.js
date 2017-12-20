@@ -1,8 +1,14 @@
 var express = require('express');
+
+var dotenv = require('dotenv');
+dotenv.load();
+
 var api = require('./routes');
 var bodyParser = require('body-parser');
 var path = require('path');
-var port = process.env.PORT || 3000;
+
+console.log(process.env.PORT);
+var port = process.env.PORT || 4000;
 var app = express();
 
 

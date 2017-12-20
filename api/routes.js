@@ -1,14 +1,16 @@
 var express = require('express');
 
 var router = express.Router();
+
 var db = require('./conn');
 
 var fs = require('fs');
-var API_HOST = 'http://127.0.0.1:3000';
+
+var API_HOST = process.env.API_HOST;
+
 
 // middleware that is specific to this router
 router.use(function timeLog (req, res, next) {
-    console.log('Time: ', Date.now());
     next()
 });
 
@@ -52,7 +54,6 @@ router.post('/save/steps', function (req, res, next) {
             return v != '';
         }).join('_');
 
-        console.log(nameId);
         var data = {
             websiteName: intro.websiteName,
             steps: steps,

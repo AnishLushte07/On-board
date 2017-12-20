@@ -1,7 +1,6 @@
 
 
 /*Move webpage html by 30px and make room for side panel */
-var width = 30;
 var html;
 if (document.documentElement) {
     html = document.documentElement;
