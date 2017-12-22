@@ -7,12 +7,11 @@ var api = require('./routes');
 var bodyParser = require('body-parser');
 var path = require('path');
 
-console.log(process.env.PORT);
 var port = process.env.PORT || 4000;
 var app = express();
 
 
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'intro')));
 

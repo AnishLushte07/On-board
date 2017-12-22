@@ -1,6 +1,6 @@
 (function(window){
 
-	var hostname = 'http://localhost:3000';
+	var hostname = $hostname;
 	
 	function loadjscssfile(filename, filetype){
 	    if (filetype=="js"){ //if filename is a external JavaScript file

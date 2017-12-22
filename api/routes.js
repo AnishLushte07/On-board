@@ -24,7 +24,9 @@ function fetchStep(req, res) {
 
         if(introSteps){
             var fileJs = fs.readFileSync('./loadIntro.js', 'utf-8');
-            var out = fileJs.replace('$steps', JSON.stringify(introSteps));
+            var out;
+             out = fileJs.replace('$steps', JSON.stringify(introSteps));
+             out = out.replace('$hostname', API_HOST);
 
             res.setHeader('Allow-control-access-origin', '*');
             res.setHeader('content-type', 'application/javascript');
